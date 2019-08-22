@@ -13,6 +13,16 @@ let routes = [
         path: '/posts/:id',
         name: 'posts',
         components: require('./components/posts/Post')
+    },
+    {
+        path: '/register',
+        name: 'register',
+        components: require('./components/register/Register')
+    },
+    {
+        path: '/confirm',
+        name: 'confirm',
+        components: require('./components/confirm/Email')
     }
 ]
 

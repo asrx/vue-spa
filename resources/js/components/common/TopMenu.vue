@@ -4,8 +4,8 @@
             <router-link to="/"> Vue-SPA </router-link>
         </h5>
         <nav class="my-2 my-md-0 mr-md-3">
-            <router-link to="/about" class="p-2 text-dark">
-                about
+            <router-link to="/register" class="p-2 text-dark">
+                注册
             </router-link>
         </nav>
     </div>

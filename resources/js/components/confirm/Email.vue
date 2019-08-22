@@ -3,10 +3,10 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">注 册</div>
+                    <div class="card-header">激活你的账户</div>
 
                     <div class="card-body">
-                        <register-form></register-form>
+                        <strong>激活邮件已经发送到你的邮箱，请点击激活链接激活你的账户</strong>
                     </div>
                 </div>
             </div>
@@ -15,13 +15,8 @@
 </template>
 
 <script>
-    import RegisterForm from './RegisterForm'
-
     export default {
-        name: "Register",
-        components: {
-            RegisterForm
-        }
+        name: "Email"
     }
 </script>
 
