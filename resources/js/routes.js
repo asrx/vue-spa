@@ -56,7 +56,7 @@ const router = new VueRouter({
 // 检测是否登录
 router.beforeEach((to,from,next) => {
     if (to.meta.requiresAuth) {
-        if (Store.state.authenticated || JwtAuth.getToken()){
+        if (Store.state.AuthUser.authenticated || JwtAuth.getToken()){
             return next()
         }else{
             return next({'name':'login'})
@@ -64,7 +64,7 @@ router.beforeEach((to,from,next) => {
     }
 
     if (to.meta.requiresGuest) {
-        if (Store.state.authenticated || JwtAuth.getToken()){
+        if (Store.state.AuthUser.authenticated || JwtAuth.getToken()){
             return next({'name':'home'})
         }
     }

@@ -1931,7 +1931,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     user: function user(state) {
       return state.AuthUser;
     }
-  }))
+  })),
+  methods: {
+    logout: function logout() {
+      var _this = this;
+
+      this.$store.dispatch('logoutRequest').then(function (response) {
+        _this.$router.push({
+          name: 'home'
+        });
+      });
+    }
+  }
 });
 
 /***/ }),
@@ -48874,9 +48885,14 @@ var render = function() {
           _vm._v(" "),
           _vm.user.authenticated
             ? _c(
-                "router-link",
-                { staticClass: "p-2 text-dark", attrs: { to: "#" } },
-                [_c("a", { attrs: { href: "#123" } }, [_vm._v("退出")])]
+                "a",
+                {
+                  staticClass:
+                    "p-2 text-dark router-link-exact-active router-link-active",
+                  attrs: { href: "#" },
+                  on: { click: _vm.logout }
+                },
+                [_vm._v("\n            退出\n        ")]
               )
             : _vm._e()
         ],
@@ -66975,7 +66991,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
 
 router.beforeEach(function (to, from, next) {
   if (to.meta.requiresAuth) {
-    if (_store_index__WEBPACK_IMPORTED_MODULE_1__["default"].state.authenticated || _helpers_jwt__WEBPACK_IMPORTED_MODULE_2__["default"].getToken()) {
+    if (_store_index__WEBPACK_IMPORTED_MODULE_1__["default"].state.AuthUser.authenticated || _helpers_jwt__WEBPACK_IMPORTED_MODULE_2__["default"].getToken()) {
       return next();
     } else {
       return next({
@@ -66985,7 +67001,7 @@ router.beforeEach(function (to, from, next) {
   }
 
   if (to.meta.requiresGuest) {
-    if (_store_index__WEBPACK_IMPORTED_MODULE_1__["default"].state.authenticated || _helpers_jwt__WEBPACK_IMPORTED_MODULE_2__["default"].getToken()) {
+    if (_store_index__WEBPACK_IMPORTED_MODULE_1__["default"].state.AuthUser.authenticated || _helpers_jwt__WEBPACK_IMPORTED_MODULE_2__["default"].getToken()) {
       return next({
         'name': 'home'
       });
@@ -67037,6 +67053,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _mutation_type__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./../mutation-type */ "./resources/js/store/mutation-type.js");
+var _mutations;
+
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
@@ -67046,20 +67064,29 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     name: null,
     email: null
   },
-  mutations: _defineProperty({}, _mutation_type__WEBPACK_IMPORTED_MODULE_0__["SET_AUTH_USER"], function (state, payload) {
+  mutations: (_mutations = {}, _defineProperty(_mutations, _mutation_type__WEBPACK_IMPORTED_MODULE_0__["SET_AUTH_USER"], function (state, payload) {
     state.authenticated = true;
     state.name = payload.user.name;
     state.email = payload.user.email;
-  }),
+  }), _defineProperty(_mutations, _mutation_type__WEBPACK_IMPORTED_MODULE_0__["UNSET_AUTH_USER"], function (state) {
+    state.authenticated = false;
+    state.name = null;
+    state.email = null;
+  }), _mutations),
   actions: {
     setAuthUser: function setAuthUser(_ref) {
-      var commit = _ref.commit,
-          dispatch = _ref.dispatch;
-      axios.get('/api/me').then(function (response) {
+      var commit = _ref.commit;
+      return axios.get('/api/me').then(function (response) {
         commit({
           type: _mutation_type__WEBPACK_IMPORTED_MODULE_0__["SET_AUTH_USER"],
           user: response.data
         });
+      });
+    },
+    unsetAuthUser: function unsetAuthUser(_ref2) {
+      var commit = _ref2.commit;
+      commit({
+        type: _mutation_type__WEBPACK_IMPORTED_MODULE_0__["UNSET_AUTH_USER"]
       });
     }
   }
@@ -67082,11 +67109,18 @@ __webpack_require__.r(__webpack_exports__);
   actions: {
     loginRequest: function loginRequest(_ref, formData) {
       var dispatch = _ref.dispatch;
-      axios.post('/api/login', formData).then(function (response) {
+      return axios.post('/api/login', formData).then(function (response) {
         _helpers_jwt__WEBPACK_IMPORTED_MODULE_0__["default"].setToken(response.data.token);
         dispatch('setAuthUser');
       })["catch"](function (error) {
         console.log(error.response.data);
+      });
+    },
+    logoutRequest: function logoutRequest(_ref2) {
+      var dispatch = _ref2.dispatch;
+      return axios.post('/api/logout').then(function (response) {
+        dispatch('unsetAuthUser');
+        _helpers_jwt__WEBPACK_IMPORTED_MODULE_0__["default"].removeToken();
       });
     }
   }
@@ -67098,13 +67132,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!*********************************************!*\
   !*** ./resources/js/store/mutation-type.js ***!
   \*********************************************/
-/*! exports provided: SET_AUTH_USER */
+/*! exports provided: SET_AUTH_USER, UNSET_AUTH_USER */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_AUTH_USER", function() { return SET_AUTH_USER; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UNSET_AUTH_USER", function() { return UNSET_AUTH_USER; });
 var SET_AUTH_USER = 'SET_AUTH_USER';
+var UNSET_AUTH_USER = 'UNSET_AUTH_USER';
 
 /***/ }),
 

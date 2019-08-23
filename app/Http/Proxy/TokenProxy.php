@@ -51,6 +51,29 @@ class TokenProxy
             'token' => $token['access_token'],
             'expires_in' => $token['expires_in'],
 
-        ])->cookie('refreshToken',$token['refresh_token'], 864000, null, null, false, true);
+        ])->cookie('refreshToken',$token['refresh_token'], 14400, null, null, false, true);
+    }
+
+    public function logout()
+    {
+        $user = auth()->guard('api')->user();
+        $accessToken = $user->token();
+
+        // 让 refresh_token 失效
+        app('db')->table('oauth_refresh_tokens')
+            ->where('access_token_id', $accessToken->id)
+            ->update([
+                'revoked' => true
+            ]);
+
+        // 移除 refreshToken 的 Cookie
+        app('cookie')->forget('refreshToken');
+
+        // accessToken 失效
+        $accessToken->revoke();
+
+        return response()->json([
+            'message' => 'Logout!'
+        ],204);
     }
 }
