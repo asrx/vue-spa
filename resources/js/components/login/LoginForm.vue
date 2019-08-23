@@ -53,19 +53,17 @@
         methods:{
             login(){
                 let formData = {
-                    client_id: 2,
-                    client_secret: '3KBHiCClUaqPfhfVI4BoygFyP6827xKWZNTqX9Fo',
-                    grant_type: 'password',
-                    scope:'',
-                    username: this.email,
+                    email: this.email,
                     password: this.password
                 }
 
                 // Submit 验证
                 this.$validator.validateAll().then(result=>{
-                    axios.post('/oauth/token',formData).then(response => {
-                        JWTToken.setToken(response.data.access_token)
+                    axios.post('/api/login',formData).then(response => {
                         console.log(response.data)
+                        JWTToken.setToken(response.data.token)
+                    }).catch(error => {
+                        console.log(error.response.data)
                     })
                 })
 

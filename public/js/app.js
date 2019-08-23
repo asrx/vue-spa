@@ -2041,18 +2041,16 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     login: function login() {
       var formData = {
-        client_id: 2,
-        client_secret: '3KBHiCClUaqPfhfVI4BoygFyP6827xKWZNTqX9Fo',
-        grant_type: 'password',
-        scope: '',
-        username: this.email,
+        email: this.email,
         password: this.password // Submit 验证
 
       };
       this.$validator.validateAll().then(function (result) {
-        axios.post('/oauth/token', formData).then(function (response) {
-          _helpers_jwt__WEBPACK_IMPORTED_MODULE_0__["default"].setToken(response.data.access_token);
+        axios.post('/api/login', formData).then(function (response) {
           console.log(response.data);
+          _helpers_jwt__WEBPACK_IMPORTED_MODULE_0__["default"].setToken(response.data.token);
+        })["catch"](function (error) {
+          console.log(error.response.data);
         });
       });
     }
