@@ -2190,6 +2190,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "RegisterForm",
   data: function data() {
@@ -2206,14 +2210,16 @@ __webpack_require__.r(__webpack_exports__);
       var formData = {
         name: this.name,
         email: this.email,
-        password: this.password
-      };
-      console.log(formData);
-      axios.post('/api/register', formData).then(function (response) {
-        console.log('Register Successed!');
+        password: this.password // Submit 验证
 
-        _this.$router.push({
-          name: 'confirm'
+      };
+      this.$validator.validateAll().then(function (result) {
+        axios.post('/api/register', formData).then(function (response) {
+          console.log('Register Successed!');
+
+          _this.$router.push({
+            name: 'confirm'
+          });
         });
       });
     }
@@ -49003,6 +49009,7 @@ var render = function() {
             class: { "is-invalid": _vm.errors.has("name") },
             attrs: {
               id: "name",
+              "data-vv-as": "用户名",
               type: "text",
               name: "name",
               autocomplete: "name",
@@ -49030,7 +49037,7 @@ var render = function() {
                   expression: "errors.has('name')"
                 }
               ],
-              staticClass: "form-check-label"
+              staticClass: "invalid-feedback"
             },
             [_vm._v(_vm._s(_vm.errors.first("name")))]
           )
@@ -49067,6 +49074,7 @@ var render = function() {
             class: { "is-invalid": _vm.errors.has("email") },
             attrs: {
               id: "email",
+              "data-vv-as": "邮箱",
               type: "email",
               name: "email",
               autocomplete: "email"
@@ -49093,7 +49101,7 @@ var render = function() {
                   expression: "errors.has('email')"
                 }
               ],
-              staticClass: "form-check-label"
+              staticClass: "invalid-feedback"
             },
             [_vm._v(_vm._s(_vm.errors.first("email")))]
           )
@@ -49136,6 +49144,7 @@ var render = function() {
               class: { "is-invalid": _vm.errors.has("password") },
               attrs: {
                 id: "password",
+                "data-vv-as": "密码",
                 type: "password",
                 name: "password",
                 autocomplete: "new-password"
@@ -49162,7 +49171,7 @@ var render = function() {
                     expression: "errors.has('password')"
                   }
                 ],
-                staticClass: "form-check-label"
+                staticClass: "invalid-feedback"
               },
               [_vm._v(_vm._s(_vm.errors.first("password")))]
             )
@@ -49200,6 +49209,7 @@ var render = function() {
               class: { "is-invalid": _vm.errors.has("password_confirmation") },
               attrs: {
                 id: "password-confirm",
+                "data-vv-as": "确认密码",
                 type: "password",
                 name: "password_confirmation",
                 autocomplete: "new-password"
@@ -49217,7 +49227,7 @@ var render = function() {
                     expression: "errors.has('password_confirmation')"
                   }
                 ],
-                staticClass: "form-check-label"
+                staticClass: "invalid-feedback"
               },
               [_vm._v(_vm._s(_vm.errors.first("password_confirmation")))]
             )
@@ -64250,17 +64260,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
 /* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./routes */ "./resources/js/routes.js");
 /* harmony import */ var _components_App__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/App */ "./resources/js/components/App.vue");
-/* harmony import */ var vee_validate__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vee-validate */ "./node_modules/vee-validate/dist/vee-validate.esm.js");
+/* harmony import */ var _locale_zh_CN__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./locale/zh_CN */ "./resources/js/locale/zh_CN.js");
+/* harmony import */ var vee_validate__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vee-validate */ "./node_modules/vee-validate/dist/vee-validate.esm.js");
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 
 
+ // import zh_CN from 'vee-validate/dist/locale/zh_CN';
+
 
 
 Vue.use(vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]);
-Vue.use(vee_validate__WEBPACK_IMPORTED_MODULE_3__["default"]); // Vue.component('ValidationProvider', VeeValidate);
-// 全局
+Vue.use(vee_validate__WEBPACK_IMPORTED_MODULE_4__["default"]);
+vee_validate__WEBPACK_IMPORTED_MODULE_4__["Validator"].localize('zh_CN', _locale_zh_CN__WEBPACK_IMPORTED_MODULE_3__["default"]); // 全局
 
 Vue.component('app', _components_App__WEBPACK_IMPORTED_MODULE_2__["default"]);
 new Vue({
@@ -64924,6 +64937,232 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RegisterForm_vue_vue_type_template_id_6c483b58_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
+
+/***/ }),
+
+/***/ "./resources/js/locale/utils.js":
+/*!**************************************!*\
+  !*** ./resources/js/locale/utils.js ***!
+  \**************************************/
+/*! exports provided: formatFileSize, isDefinedGlobally */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "formatFileSize", function() { return formatFileSize; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isDefinedGlobally", function() { return isDefinedGlobally; });
+/**
+ * Formates file size.
+ *
+ * @param {Number|String} size
+ */
+var formatFileSize = function formatFileSize(size) {
+  var units = ['Byte', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  var threshold = 1024;
+  size = Number(size) * threshold;
+  var i = size === 0 ? 0 : Math.floor(Math.log(size) / Math.log(threshold));
+  return "".concat((size / Math.pow(threshold, i)).toFixed(2) * 1, " ").concat(units[i]);
+};
+/**
+ * Checks if vee-validate is defined globally.
+ */
+
+var isDefinedGlobally = function isDefinedGlobally() {
+  return typeof VeeValidate !== 'undefined';
+};
+
+/***/ }),
+
+/***/ "./resources/js/locale/zh_CN.js":
+/*!**************************************!*\
+  !*** ./resources/js/locale/zh_CN.js ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils */ "./resources/js/locale/utils.js");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+var messages = {
+  _default: function _default(field) {
+    return "".concat(field, "\u7684\u503C\u65E0\u6548");
+  },
+  after: function after(field, _ref) {
+    var _ref2 = _slicedToArray(_ref, 2),
+        target = _ref2[0],
+        inclusion = _ref2[1];
+
+    return "".concat(field, "\u5FC5\u987B\u5728").concat(target, "\u4E4B\u540E").concat(inclusion ? '或等于' + target : '');
+  },
+  alpha: function alpha(field) {
+    return "".concat(field, "\u53EA\u80FD\u5305\u542B\u5B57\u6BCD\u5B57\u7B26");
+  },
+  alpha_dash: function alpha_dash(field) {
+    return "".concat(field, "\u80FD\u591F\u5305\u542B\u5B57\u6BCD\u6570\u5B57\u5B57\u7B26\u3001\u7834\u6298\u53F7\u548C\u4E0B\u5212\u7EBF");
+  },
+  alpha_num: function alpha_num(field) {
+    return "".concat(field, "\u53EA\u80FD\u5305\u542B\u5B57\u6BCD\u6570\u5B57\u5B57\u7B26");
+  },
+  alpha_spaces: function alpha_spaces(field) {
+    return "".concat(field, "\u53EA\u80FD\u5305\u542B\u5B57\u6BCD\u5B57\u7B26\u548C\u7A7A\u683C");
+  },
+  before: function before(field, _ref3) {
+    var _ref4 = _slicedToArray(_ref3, 2),
+        target = _ref4[0],
+        inclusion = _ref4[1];
+
+    return "".concat(field, "\u5FC5\u987B\u5728").concat(target, "\u4E4B\u524D").concat(inclusion ? '或等于' + target : '');
+  },
+  between: function between(field, _ref5) {
+    var _ref6 = _slicedToArray(_ref5, 2),
+        min = _ref6[0],
+        max = _ref6[1];
+
+    return "".concat(field, "\u5FC5\u987B\u5728").concat(min, "\u4E0E").concat(max, "\u4E4B\u95F4");
+  },
+  confirmed: function confirmed(field, _ref7) {
+    var _ref8 = _slicedToArray(_ref7, 1),
+        confirmedField = _ref8[0];
+
+    return "".concat(field, "\u4E0D\u80FD\u548C").concat(confirmedField, "\u5339\u914D");
+  },
+  credit_card: function credit_card(field) {
+    return "".concat(field, "\u7684\u683C\u5F0F\u9519\u8BEF");
+  },
+  date_between: function date_between(field, _ref9) {
+    var _ref10 = _slicedToArray(_ref9, 2),
+        min = _ref10[0],
+        max = _ref10[1];
+
+    return "".concat(field, "\u5FC5\u987B\u5728").concat(min, "\u548C").concat(max, "\u4E4B\u95F4");
+  },
+  date_format: function date_format(field, _ref11) {
+    var _ref12 = _slicedToArray(_ref11, 1),
+        format = _ref12[0];
+
+    return "".concat(field, "\u5FC5\u987B\u7B26\u5408").concat(format, "\u683C\u5F0F");
+  },
+  decimal: function decimal(field) {
+    var _ref13 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [],
+        _ref14 = _slicedToArray(_ref13, 1),
+        _ref14$ = _ref14[0],
+        decimals = _ref14$ === void 0 ? '*' : _ref14$;
+
+    return "".concat(field, "\u5FC5\u987B\u662F\u6570\u5B57\uFF0C\u4E14\u80FD\u591F\u4FDD\u7559").concat(decimals === '*' ? '' : decimals, "\u4F4D\u5C0F\u6570");
+  },
+  digits: function digits(field, _ref15) {
+    var _ref16 = _slicedToArray(_ref15, 1),
+        length = _ref16[0];
+
+    return "".concat(field, "\u5FC5\u987B\u662F\u6570\u5B57\uFF0C\u4E14\u7CBE\u786E\u5230").concat(length, "\u4F4D\u6570");
+  },
+  dimensions: function dimensions(field, _ref17) {
+    var _ref18 = _slicedToArray(_ref17, 2),
+        width = _ref18[0],
+        height = _ref18[1];
+
+    return "".concat(field, "\u5FC5\u987B\u5728").concat(width, "\u50CF\u7D20\u4E0E").concat(height, "\u50CF\u7D20\u4E4B\u95F4");
+  },
+  email: function email(field) {
+    return "".concat(field, "\u4E0D\u662F\u4E00\u4E2A\u6709\u6548\u7684\u90AE\u7BB1");
+  },
+  excluded: function excluded(field) {
+    return "".concat(field, "\u4E0D\u662F\u4E00\u4E2A\u6709\u6548\u503C");
+  },
+  ext: function ext(field) {
+    return "".concat(field, "\u4E0D\u662F\u4E00\u4E2A\u6709\u6548\u7684\u6587\u4EF6");
+  },
+  image: function image(field) {
+    return "".concat(field, "\u4E0D\u662F\u4E00\u5F20\u6709\u6548\u7684\u56FE\u7247");
+  },
+  included: function included(field) {
+    return "".concat(field, "\u4E0D\u662F\u4E00\u4E2A\u6709\u6548\u503C");
+  },
+  integer: function integer(field) {
+    return "".concat(field, "\u5FC5\u987B\u662F\u6574\u6570");
+  },
+  ip: function ip(field) {
+    return "".concat(field, "\u4E0D\u662F\u4E00\u4E2A\u6709\u6548\u7684\u5730\u5740");
+  },
+  length: function length(field, _ref19) {
+    var _ref20 = _slicedToArray(_ref19, 2),
+        _length = _ref20[0],
+        max = _ref20[1];
+
+    if (max) {
+      return "".concat(field, "\u957F\u5EA6\u5FC5\u987B\u5728").concat(_length, "\u5230").concat(max, "\u4E4B\u95F4");
+    }
+
+    return "".concat(field, "\u957F\u5EA6\u5FC5\u987B\u4E3A").concat(_length);
+  },
+  max: function max(field, _ref21) {
+    var _ref22 = _slicedToArray(_ref21, 1),
+        length = _ref22[0];
+
+    return "".concat(field, "\u4E0D\u80FD\u8D85\u8FC7").concat(length, "\u4E2A\u5B57\u7B26");
+  },
+  max_value: function max_value(field, _ref23) {
+    var _ref24 = _slicedToArray(_ref23, 1),
+        max = _ref24[0];
+
+    return "".concat(field, "\u5FC5\u987B\u5C0F\u4E8E\u6216\u7B49\u4E8E").concat(max);
+  },
+  mimes: function mimes(field) {
+    return "".concat(field, "\u4E0D\u662F\u4E00\u4E2A\u6709\u6548\u7684\u6587\u4EF6\u7C7B\u578B");
+  },
+  min: function min(field, _ref25) {
+    var _ref26 = _slicedToArray(_ref25, 1),
+        length = _ref26[0];
+
+    return "".concat(field, "\u5FC5\u987B\u81F3\u5C11\u6709").concat(length, "\u4E2A\u5B57\u7B26");
+  },
+  min_value: function min_value(field, _ref27) {
+    var _ref28 = _slicedToArray(_ref27, 1),
+        min = _ref28[0];
+
+    return "".concat(field, "\u5FC5\u987B\u5927\u4E8E\u6216\u7B49\u4E8E").concat(min);
+  },
+  numeric: function numeric(field) {
+    return "".concat(field, "\u53EA\u80FD\u5305\u542B\u6570\u5B57\u5B57\u7B26");
+  },
+  regex: function regex(field) {
+    return "".concat(field, "\u683C\u5F0F\u65E0\u6548");
+  },
+  required: function required(field) {
+    return "".concat(field, "\u662F\u5FC5\u586B\u9879");
+  },
+  size: function size(field, _ref29) {
+    var _ref30 = _slicedToArray(_ref29, 1),
+        _size = _ref30[0];
+
+    return "".concat(field, "\u5FC5\u987B\u5C0F\u4E8E").concat(Object(_utils__WEBPACK_IMPORTED_MODULE_0__["formatFileSize"])(_size));
+  },
+  url: function url(field) {
+    return "".concat(field, "\u4E0D\u662F\u4E00\u4E2A\u6709\u6548\u7684url");
+  }
+};
+var locale = {
+  name: 'zh_CN',
+  messages: messages,
+  attributes: {}
+};
+
+if (Object(_utils__WEBPACK_IMPORTED_MODULE_0__["isDefinedGlobally"])()) {
+  VeeValidate.Validator.localize(_defineProperty({}, locale.name, locale));
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (locale);
 
 /***/ }),
 
