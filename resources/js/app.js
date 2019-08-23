@@ -11,6 +11,7 @@ import App from './components/App'
 import zh_CN from './locale/zh_CN';
 import VeeValidate, { Validator } from 'vee-validate';
 
+// 每次发起请求都加入headers
 axios.interceptors.request.use(config => {
     if (JwtToken.getToken()) {
         config.headers['Authorization'] = 'Bearer ' + JwtToken.getToken()

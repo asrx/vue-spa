@@ -59,11 +59,11 @@
 
                 // Submit 验证
                 this.$validator.validateAll().then(result => {
-
-                    this.$store.dispatch('loginRequest',formData).then(response => {
-                        this.$router.push({name: 'profile'})
-                    })
-
+                    if (result){
+                        this.$store.dispatch('loginRequest',formData).then(response => {
+                            this.$router.push({name: 'profile'})
+                        })
+                    }
                 })
 
             }

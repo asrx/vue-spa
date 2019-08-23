@@ -1861,6 +1861,7 @@ module.exports = function isBuffer (obj) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common_TopMenu__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common/TopMenu */ "./resources/js/components/common/TopMenu.vue");
+/* harmony import */ var _helpers_jwt__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./../helpers/jwt */ "./resources/js/helpers/jwt.js");
 //
 //
 //
@@ -1871,7 +1872,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  created: function created() {
+    if (_helpers_jwt__WEBPACK_IMPORTED_MODULE_1__["default"].getToken()) {
+      this.$store.dispatch('setAuthUser');
+    }
+  },
   components: {
     TopMenu: _common_TopMenu__WEBPACK_IMPORTED_MODULE_0__["default"]
   }
@@ -2065,11 +2072,13 @@ __webpack_require__.r(__webpack_exports__);
 
       };
       this.$validator.validateAll().then(function (result) {
-        _this.$store.dispatch('loginRequest', formData).then(function (response) {
-          _this.$router.push({
-            name: 'profile'
+        if (result) {
+          _this.$store.dispatch('loginRequest', formData).then(function (response) {
+            _this.$router.push({
+              name: 'profile'
+            });
           });
-        });
+        }
       });
     }
   }
@@ -65766,6 +65775,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 
 
+ // 每次发起请求都加入headers
 
 axios.interceptors.request.use(function (config) {
   if (_helpers_jwt__WEBPACK_IMPORTED_MODULE_3__["default"].getToken()) {
@@ -66919,6 +66929,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var routes = [{
   path: '/',
+  name: 'home',
   components: __webpack_require__(/*! ./components/pages/Home */ "./resources/js/components/pages/Home.vue"),
   meta: {}
 }, {
@@ -66934,12 +66945,16 @@ var routes = [{
   path: '/register',
   name: 'register',
   components: __webpack_require__(/*! ./components/register/Register */ "./resources/js/components/register/Register.vue"),
-  meta: {}
+  meta: {
+    requiresGuest: true
+  }
 }, {
   path: '/login',
   name: 'login',
   components: __webpack_require__(/*! ./components/login/Login */ "./resources/js/components/login/Login.vue"),
-  meta: {}
+  meta: {
+    requiresGuest: true
+  }
 }, {
   path: '/confirm',
   name: 'confirm',
@@ -66959,12 +66974,20 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
 }); // 检测是否登录
 
 router.beforeEach(function (to, from, next) {
-  if (to.requiresAuth) {
+  if (to.meta.requiresAuth) {
     if (_store_index__WEBPACK_IMPORTED_MODULE_1__["default"].state.authenticated || _helpers_jwt__WEBPACK_IMPORTED_MODULE_2__["default"].getToken()) {
       return next();
     } else {
       return next({
         'name': 'login'
+      });
+    }
+  }
+
+  if (to.meta.requiresGuest) {
+    if (_store_index__WEBPACK_IMPORTED_MODULE_1__["default"].state.authenticated || _helpers_jwt__WEBPACK_IMPORTED_MODULE_2__["default"].getToken()) {
+      return next({
+        'name': 'home'
       });
     }
   }
@@ -67032,7 +67055,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     setAuthUser: function setAuthUser(_ref) {
       var commit = _ref.commit,
           dispatch = _ref.dispatch;
-      axios.get('api/me').then(function (response) {
+      axios.get('/api/me').then(function (response) {
         commit({
           type: _mutation_type__WEBPACK_IMPORTED_MODULE_0__["SET_AUTH_USER"],
           user: response.data

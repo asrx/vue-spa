@@ -5,6 +5,7 @@ import JwtAuth from './helpers/jwt'
 let routes = [
     {
         path: '/',
+        name: 'home',
         components: require('./components/pages/Home'),
         meta:{}
     },
@@ -23,13 +24,13 @@ let routes = [
         path: '/register',
         name: 'register',
         components: require('./components/register/Register'),
-        meta:{}
+        meta:{requiresGuest: true}
     },
     {
         path: '/login',
         name: 'login',
         components: require('./components/login/Login'),
-        meta:{}
+        meta:{requiresGuest: true}
     },
     {
         path: '/confirm',
@@ -54,11 +55,17 @@ const router = new VueRouter({
 
 // 检测是否登录
 router.beforeEach((to,from,next) => {
-    if (to.requiresAuth) {
+    if (to.meta.requiresAuth) {
         if (Store.state.authenticated || JwtAuth.getToken()){
             return next()
         }else{
             return next({'name':'login'})
+        }
+    }
+
+    if (to.meta.requiresGuest) {
+        if (Store.state.authenticated || JwtAuth.getToken()){
+            return next({'name':'home'})
         }
     }
     return next()
