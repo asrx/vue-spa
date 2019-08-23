@@ -4,19 +4,32 @@
             <router-link to="/"> Vue-SPA </router-link>
         </h5>
         <nav class="my-2 my-md-0 mr-md-3">
-            <router-link to="/login" class="p-2 text-dark">
+            <router-link v-if="!user.authenticated" to="/login" class="p-2 text-dark">
                 登录
             </router-link>
-            <router-link to="/register" class="p-2 text-dark">
+            <router-link v-if="!user.authenticated" to="/register" class="p-2 text-dark">
                 注册
+            </router-link>
+            <router-link v-if="user.authenticated" to="/profile" class="p-2 text-dark">
+                个人中心
+            </router-link>
+            <router-link v-if="user.authenticated" to="#" class="p-2 text-dark">
+                <a href="#123">退出</a>
             </router-link>
         </nav>
     </div>
 </template>
 
 <script>
+    import {mapState} from 'vuex'
+
     export default {
-        name: "TopMenu"
+        name: "TopMenu",
+        computed: {
+            ...mapState({
+                user: state => state.AuthUser
+            })
+        }
     }
 </script>
 

@@ -41,9 +41,9 @@
 </template>
 
 <script>
-    import JWTToken from './../../helpers/jwt'
+
     export default {
-        name: "RegisterForm",
+        name: "LoginForm",
         data(){
             return {
                 email : '',
@@ -58,13 +58,12 @@
                 }
 
                 // Submit 验证
-                this.$validator.validateAll().then(result=>{
-                    axios.post('/api/login',formData).then(response => {
-                        console.log(response.data)
-                        JWTToken.setToken(response.data.token)
-                    }).catch(error => {
-                        console.log(error.response.data)
+                this.$validator.validateAll().then(result => {
+
+                    this.$store.dispatch('loginRequest',formData).then(response => {
+                        this.$router.push({name: 'profile'})
                     })
+
                 })
 
             }
