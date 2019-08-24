@@ -1,6 +1,5 @@
 <template>
     <form @submit.prevent="login">
-
         <div class="form-group row">
             <label for="email" class="col-md-4 col-form-label text-md-right">邮箱</label>
 
@@ -12,7 +11,7 @@
                        value="xudong0226@163.com"
                        v-model="email" type="email" class="form-control" name="email" autocomplete="email">
 
-                <span class="invalid-feedback" v-show="errors.has('email')">{{errors.first('email')}}</span>
+                <span class="invalid-feedback d-block" v-show="errors.has('email')">{{errors.first('email')}}</span>
             </div>
         </div>
 
@@ -26,7 +25,8 @@
                        data-vv-as="密码"
                        value="passowrd"
                        v-model="password" type="password" class="form-control" name="password" autocomplete="new-password">
-                <span class="invalid-feedback" v-show="errors.has('password')">{{errors.first('password')}}</span>
+                <span class="invalid-feedback d-block" v-show="errors.has('password')">{{errors.first('password')}}</span>
+                <span class="invalid-feedback d-block" v-show="mismatchError">{{bag.first('password','auth')}}</span>
             </div>
         </div>
 
@@ -41,6 +41,7 @@
 </template>
 
 <script>
+    import { ErrorBag } from 'vee-validate'
 
     export default {
         name: "LoginForm",
@@ -48,6 +49,12 @@
             return {
                 email : '',
                 password : '',
+                bag: new ErrorBag()
+            }
+        },
+        computed:{
+            mismatchError(){
+                return this.bag.has('password','auth') && !this.errors.has('password')
             }
         },
         methods:{
@@ -62,6 +69,19 @@
                     if (result){
                         this.$store.dispatch('loginRequest',formData).then(response => {
                             this.$router.push({name: 'profile'})
+                        }).catch(error => {
+                            if(error.response.status === 421){
+                                /*
+                                const error = {
+                                    field: 'Field Name',
+                                    msg: 'Error message',
+                                    rule: 'Rule Name',  // optional
+                                    scope: 'Scope Name, // optional
+                                    id: 'uniqueId'      // optional
+                                }
+                                * */
+                                this.bag.add({field:"password",msg:'邮箱密码不相符',scope: 'auth'})
+                            }
                         })
                     }
                 })

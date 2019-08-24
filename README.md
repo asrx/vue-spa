@@ -10,7 +10,18 @@ npm install
 npm install vue-router --save
 ```
 
+#### Create database
+```shell
+touch database.sqlit
 
+php artisan migrate
+```
+
+#### configuration
+```
+# The domain name of your project
+APP_URL=http://127.0.0.1:8000
+```
 
 ## Usage
 

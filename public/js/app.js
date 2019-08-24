@@ -1494,7 +1494,7 @@ module.exports = function spread(callback) {
 
 
 var bind = __webpack_require__(/*! ./helpers/bind */ "./node_modules/axios/lib/helpers/bind.js");
-var isBuffer = __webpack_require__(/*! is-buffer */ "./node_modules/axios/node_modules/is-buffer/index.js");
+var isBuffer = __webpack_require__(/*! is-buffer */ "./node_modules/is-buffer/index.js");
 
 /*global toString:true*/
 
@@ -1829,28 +1829,6 @@ module.exports = {
 
 /***/ }),
 
-/***/ "./node_modules/axios/node_modules/is-buffer/index.js":
-/*!************************************************************!*\
-  !*** ./node_modules/axios/node_modules/is-buffer/index.js ***!
-  \************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/*!
- * Determine if an object is a Buffer
- *
- * @author   Feross Aboukhadijeh <https://feross.org>
- * @license  MIT
- */
-
-module.exports = function isBuffer (obj) {
-  return obj != null && obj.constructor != null &&
-    typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
-}
-
-
-/***/ }),
-
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/App.vue?vue&type=script&lang=js&":
 /*!**************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/App.vue?vue&type=script&lang=js& ***!
@@ -2023,6 +2001,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vee_validate__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vee-validate */ "./node_modules/vee-validate/dist/vee-validate.esm.js");
 //
 //
 //
@@ -2065,13 +2044,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "LoginForm",
   data: function data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      bag: new vee_validate__WEBPACK_IMPORTED_MODULE_0__["ErrorBag"]()
     };
+  },
+  computed: {
+    mismatchError: function mismatchError() {
+      return this.bag.has('password', 'auth') && !this.errors.has('password');
+    }
   },
   methods: {
     login: function login() {
@@ -2088,6 +2074,23 @@ __webpack_require__.r(__webpack_exports__);
             _this.$router.push({
               name: 'profile'
             });
+          })["catch"](function (error) {
+            if (error.response.status === 421) {
+              /*
+              const error = {
+                  field: 'Field Name',
+                  msg: 'Error message',
+                  rule: 'Rule Name',  // optional
+                  scope: 'Scope Name, // optional
+                  id: 'uniqueId'      // optional
+              }
+              * */
+              _this.bag.add({
+                field: "password",
+                msg: '邮箱密码不相符',
+                scope: 'auth'
+              });
+            }
           });
         }
       });
@@ -6859,6 +6862,28 @@ __webpack_require__.r(__webpack_exports__);
 
 }));
 //# sourceMappingURL=bootstrap.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/is-buffer/index.js":
+/*!*****************************************!*\
+  !*** ./node_modules/is-buffer/index.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*!
+ * Determine if an object is a Buffer
+ *
+ * @author   Feross Aboukhadijeh <https://feross.org>
+ * @license  MIT
+ */
+
+module.exports = function isBuffer (obj) {
+  return obj != null && obj.constructor != null &&
+    typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
+}
 
 
 /***/ }),
@@ -49071,7 +49096,7 @@ var render = function() {
                   expression: "errors.has('email')"
                 }
               ],
-              staticClass: "invalid-feedback"
+              staticClass: "invalid-feedback d-block"
             },
             [_vm._v(_vm._s(_vm.errors.first("email")))]
           )
@@ -49142,9 +49167,25 @@ var render = function() {
                     expression: "errors.has('password')"
                   }
                 ],
-                staticClass: "invalid-feedback"
+                staticClass: "invalid-feedback d-block"
               },
               [_vm._v(_vm._s(_vm.errors.first("password")))]
+            ),
+            _vm._v(" "),
+            _c(
+              "span",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.mismatchError,
+                    expression: "mismatchError"
+                  }
+                ],
+                staticClass: "invalid-feedback d-block"
+              },
+              [_vm._v(_vm._s(_vm.bag.first("password", "auth")))]
             )
           ])
         ]
@@ -66131,14 +66172,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************************************!*\
   !*** ./resources/js/components/login/LoginForm.vue ***!
   \*****************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _LoginForm_vue_vue_type_template_id_f4c6bce8_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LoginForm.vue?vue&type=template&id=f4c6bce8&scoped=true& */ "./resources/js/components/login/LoginForm.vue?vue&type=template&id=f4c6bce8&scoped=true&");
 /* harmony import */ var _LoginForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./LoginForm.vue?vue&type=script&lang=js& */ "./resources/js/components/login/LoginForm.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _LoginForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _LoginForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -66168,7 +66210,7 @@ component.options.__file = "resources/js/components/login/LoginForm.vue"
 /*!******************************************************************************!*\
   !*** ./resources/js/components/login/LoginForm.vue?vue&type=script&lang=js& ***!
   \******************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -67112,8 +67154,6 @@ __webpack_require__.r(__webpack_exports__);
       return axios.post('/api/login', formData).then(function (response) {
         _helpers_jwt__WEBPACK_IMPORTED_MODULE_0__["default"].setToken(response.data.token);
         dispatch('setAuthUser');
-      })["catch"](function (error) {
-        console.log(error.response.data);
       });
     },
     logoutRequest: function logoutRequest(_ref2) {
@@ -67162,8 +67202,8 @@ var UNSET_AUTH_USER = 'UNSET_AUTH_USER';
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/Jerry/Documents/Project/github/vue-spa/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /Users/Jerry/Documents/Project/github/vue-spa/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! F:\Project\Github\vue-spa\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! F:\Project\Github\vue-spa\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
