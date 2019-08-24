@@ -8,7 +8,6 @@
                        :class="{ 'is-invalid' : errors.has('email') }"
                        v-validate="{required: true, min: 4}"
                        data-vv-as="邮箱"
-                       value="xudong0226@163.com"
                        v-model="email" type="email" class="form-control" name="email" autocomplete="email">
 
                 <span class="invalid-feedback d-block" v-show="errors.has('email')">{{errors.first('email')}}</span>
@@ -23,7 +22,6 @@
                        :class="{ 'is-invalid' : errors.has('password') }"
                        v-validate="{ required: true, min: 6 }"
                        data-vv-as="密码"
-                       value="passowrd"
                        v-model="password" type="password" class="form-control" name="password" autocomplete="new-password">
                 <span class="invalid-feedback d-block" v-show="errors.has('password')">{{errors.first('password')}}</span>
                 <span class="invalid-feedback" :class="{ 'd-block' : mismatchError}" v-show="mismatchError">{{bag.first('password','auth')}}</span>

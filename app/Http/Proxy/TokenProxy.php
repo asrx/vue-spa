@@ -17,7 +17,7 @@ class TokenProxy
 
     public function login($email, $password)
     {
-        if (auth()->attempt(['email'=>$email,'password'=>$password]) || true){
+        if (auth()->attempt(['email'=>$email,'password'=>$password])){
 
             return $this->proxy('password',[
                 'username' => $email,
@@ -77,7 +77,11 @@ class TokenProxy
     public function logout()
     {
         $user = auth()->guard('api')->user();
-        if ($user){
+
+        // 移除 refreshToken 的 Cookie
+        app('cookie')->queue(app('cookie')->forget('refreshToken'));
+
+        if (!is_null($user)){
             $accessToken = $user->token();
 
             // 让 refresh_token 失效
@@ -87,12 +91,11 @@ class TokenProxy
                     'revoked' => true
                 ]);
 
-            // 移除 refreshToken 的 Cookie
-            app('cookie')->forget('refreshToken');
 
             // accessToken 失效
             $accessToken->revoke();
         }
+
         return response()->json([
             'message' => 'Logout!'
         ],204);
