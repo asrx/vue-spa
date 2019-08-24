@@ -26,7 +26,7 @@
                        value="passowrd"
                        v-model="password" type="password" class="form-control" name="password" autocomplete="new-password">
                 <span class="invalid-feedback d-block" v-show="errors.has('password')">{{errors.first('password')}}</span>
-                <span class="invalid-feedback d-block" v-show="mismatchError">{{bag.first('password','auth')}}</span>
+                <span class="invalid-feedback" :class="{ 'd-block' : mismatchError}" v-show="mismatchError">{{bag.first('password','auth')}}</span>
             </div>
         </div>
 
@@ -54,7 +54,10 @@
         },
         computed:{
             mismatchError(){
-                return this.bag.has('password','auth') && !this.errors.has('password')
+                if (this.errors.has('password')){
+                    this.bag.remove('password','auth')
+                }
+                return this.bag.has('password','auth')
             }
         },
         methods:{

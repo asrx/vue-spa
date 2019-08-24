@@ -15,12 +15,23 @@ npm install vue-router --save
 touch database.sqlit
 
 php artisan migrate
+
+php artisan passport:install
 ```
 
 #### configuration
 ```
 # The domain name of your project
 APP_URL=http://127.0.0.1:8000
+
+
+PERSONAL_CLIENT_ID=1
+PERSONAL_CLIENT_secret=***************
+
+PASSPORT_CLIENT_ID=2
+PASSPORT_CLIENT_secret=***************
+
+
 ```
 
 ## Usage

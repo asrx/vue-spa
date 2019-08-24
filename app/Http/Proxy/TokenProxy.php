@@ -17,7 +17,8 @@ class TokenProxy
 
     public function login($email, $password)
     {
-        if (auth()->attempt(['email'=>$email,'password'=>$password])){
+        if (auth()->attempt(['email'=>$email,'password'=>$password]) || true){
+
             return $this->proxy('password',[
                 'username' => $email,
                 'password' => $password,
@@ -41,39 +42,60 @@ class TokenProxy
             'scope'=>'',
         ]);
 
-        $response = $this->http->post(env('APP_URL').'/oauth/token',[
-            'form_params' => $data
-        ]);
 
-        $token = json_decode((string) $response->getBody(),true);
+        try{
+            $response = $this->http->post(env('APP_URL').'/oauth/token',[
+                'form_params' => $data
+            ]);
+
+            $token = json_decode((string) $response->getBody(),true);
+
+            return response()->json([
+                'token' => $token['access_token'],
+                'expires_in' => $token['expires_in'],
+                'auth_id' => md5($token['refresh_token'])
+            ])->cookie('refreshToken',$token['refresh_token'], 14400, null, null, false, true);
+
+        }catch (\GuzzleHttp\Exception\ClientException $clientException){
+
+        }
 
         return response()->json([
-            'token' => $token['access_token'],
-            'expires_in' => $token['expires_in'],
+            'message' => 'RefreshToken is Failure!'
+        ],401);
+    }
 
-        ])->cookie('refreshToken',$token['refresh_token'], 14400, null, null, false, true);
+    public function refresh()
+    {
+        $refreshToken = request()->cookie('refreshToken');
+
+        return $this->proxy('refresh_token',[
+            'refresh_token' => $refreshToken
+        ]);
     }
 
     public function logout()
     {
         $user = auth()->guard('api')->user();
-        $accessToken = $user->token();
+        if ($user){
+            $accessToken = $user->token();
 
-        // 让 refresh_token 失效
-        app('db')->table('oauth_refresh_tokens')
-            ->where('access_token_id', $accessToken->id)
-            ->update([
-                'revoked' => true
-            ]);
+            // 让 refresh_token 失效
+            app('db')->table('oauth_refresh_tokens')
+                ->where('access_token_id', $accessToken->id)
+                ->update([
+                    'revoked' => true
+                ]);
 
-        // 移除 refreshToken 的 Cookie
-        app('cookie')->forget('refreshToken');
+            // 移除 refreshToken 的 Cookie
+            app('cookie')->forget('refreshToken');
 
-        // accessToken 失效
-        $accessToken->revoke();
-
+            // accessToken 失效
+            $accessToken->revoke();
+        }
         return response()->json([
             'message' => 'Logout!'
         ],204);
     }
+
 }

@@ -21,14 +21,19 @@ class LoginController extends Controller
         $this->proxy = $proxy;
     }
 
-    public function login(Request $request)
+    public function login()
     {
-        return $this->proxy->login($request->input('email'),$request->input('password'));
+        return $this->proxy->login(\request('email'),\request('password'));
     }
 
-    public function logout(Request $request)
+    public function logout()
     {
         return $this->proxy->logout();
+    }
+
+    public function refresh()
+    {
+        return $this->proxy->refresh();
     }
 
 }
